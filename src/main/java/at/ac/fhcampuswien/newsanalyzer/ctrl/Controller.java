@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.newsanalyzer.ctrl;
 
+import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.beans.Article;
 import at.ac.fhcampuswien.newsapi.beans.NewsResponse;
@@ -8,10 +9,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+// In cooperation with Welna & Salvatian :)
 public class Controller {
 
-	public static final String APIKEY = "0038b5ccc1124e94b01d19b0d5982697";  //0038b5ccc1124e94b01d19b0d5982697
+	public static final String APIKEY = "25fe590b3b774181ae0683d247c3b844";  //0038b5ccc1124e94b01d19b0d5982697
 
 	private List<Article> articles = null;
 
@@ -84,4 +85,24 @@ public class Controller {
 				.map(stringListEntry -> stringListEntry.getKey() + " " + stringListEntry.getValue().size())
 				.orElseThrow();
 	}
+
+	private List<String> urlsToList()  {
+
+		return articles.stream()
+				.map(Article::getUrl)
+				.collect(Collectors.toList());
+	}
+
+	public void downloadURL(Downloader downloader)  {
+
+		long begin = System.nanoTime();
+		downloader.process(urlsToList());
+		long end = System.nanoTime();
+		long timePassed = begin - end;
+
+		System.out.println(timePassed + " nanoseconds");
+		System.out.println(downloader.getClass().getName());
+
+	}
+
 }
